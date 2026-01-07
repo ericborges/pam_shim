@@ -38,7 +38,7 @@ The easiest and most common way to use this package is via the included Home-Man
 
 ```nix
 imports = [
-    pam_shim.homeManagerModules.default
+    pam_shim.homeModules.default
 ];
 pamShim.enable = true;
 ```
