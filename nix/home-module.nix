@@ -16,7 +16,7 @@
   config = {
     assertions = lib.mkIf config.pamShim.enable [
       {
-        assertion = pkgs.stdenv.isLinux;
+        assertion = pkgs.stdenv.hostPlatform.isLinux;
         message = "pam_shim is not available on non-Linux platforms.";
       }
     ];
