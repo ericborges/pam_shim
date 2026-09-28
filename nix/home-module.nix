@@ -21,14 +21,24 @@
       }
     ];
 
-    lib.pamShim.replacePam = drv: if config.pamShim.enable then pkgs.replaceDependencies {
-      inherit drv;
-      replacements = [
-        {
-          oldDependency = pkgs.linux-pam;
-          newDependency = config.pamShim.package;
+    lib.pamShim.replacePam = drv:
+      if config.pamShim.enable then
+        let
+          wrapped = pkgs.replaceDependencies {
+            inherit drv;
+            replacements = [
+              {
+                oldDependency = pkgs.linux-pam;
+                newDependency = config.pamShim.package;
+              }
+            ];
+          };
+        in
+        wrapped // {
+          # replaceDependencies drops meta; restore it so consumers
+          # (e.g. lib.getExe) can keep using meta.mainProgram.
+          meta = (wrapped.meta or { }) // (drv.meta or { });
         }
-      ];
-    } else drv;
+      else drv;
   };
 }
